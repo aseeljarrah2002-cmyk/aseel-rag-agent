@@ -1,0 +1,5 @@
+Flask
+gunicorn
+openai
+azure-search-documents
+azure-core
