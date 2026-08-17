@@ -1,9 +1,9 @@
 import os
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from azure.core.credentials import AzureKeyCredential
 from azure.search.documents import SearchClient
-from openai import AzureOpenAI
+from openai import OpenAI
 
 app = Flask(_name_)
 
@@ -36,11 +36,11 @@ search_client = SearchClient(
 # Azure OpenAI
 # =========================
 
-openai_client = AzureOpenAI(
-    azure_endpoint=OPENAI_ENDPOINT,
+openai_client = OpenAI(
     api_key=OPENAI_KEY,
-    api_version="2025-04-01-preview"
+    base_url=OPENAI_ENDPOINT
 )
+
 
 
 # =========================
@@ -49,10 +49,8 @@ openai_client = AzureOpenAI(
 
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({
-        "status": "ok",
-        "message": "RAG API is running"
-    })
+    return render_template("index.html")
+
 
 
 # =========================
@@ -80,7 +78,7 @@ def ask():
     context_parts = []
 
     for result in results:
-        content = result.get("content")
+        content = result.get("snippet")
 
         if content:
             context_parts.append(content)
@@ -136,28 +134,3 @@ if _name_ == "_main_":
         host="0.0.0.0",
         port=int(os.environ.get("PORT", 8000))
     )
-
-
-    
-
-
-       
-    
-
-
-    
-
-
-    
-
-    
-    
-
-       
-            
-        
-
-
-    
-
-    
